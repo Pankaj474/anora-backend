@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  h1= title
+  
+
+
+  script.
+    $( window ).on('load', function() {
+        const queryString = window.location.search;
+       
+        const parameters = new URLSearchParams(queryString);
+        const token = parameters.get('token');
+        window.history.replaceState({}, "localhost:3300", "/" + "user/account_verification");
+
+        $.ajax({
+            type: "POST",
+            url: "/user/account_verification",
+            headers: {
+                'Authorization': 'Bearer ' + token, 
+                'Referrer-Policy': 'no-referrer'
+            },
+            data: "Hey! verify me please",
+            success: function(data){
+                alert(data.message);
+            },
+            error: function(error){
+                alert(error.message)
+            }
+        });
+
+
+    });

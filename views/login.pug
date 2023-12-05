@@ -1,0 +1,59 @@
+extends layout
+
+block content
+  h2= title
+
+  div 
+  form#login-form(action='javascript:login()', method='POST')
+    input(type="email" name="email" placeholder="Email")
+    br
+    br
+    input(type="password" name="password" autocomplete="current-password" placeholder="Password")
+    br
+    br
+    button#login(type="submit") Login
+  br
+  br
+  | Not signed up? 
+  a(href="/") Signup
+  br
+  br
+  a(href="/user/forgot_password") Forgot password?
+  br
+  br 
+  br
+  div#documentation
+    h4 Documentaion 
+    br
+    p <strong>Login</strong> endpoint authenticates and returns a JSON object that contains a JWT token,  firstname, and message.
+    p In development, a POST request to http://localhost:3000/user/login returns the following object:
+    p {
+    p    token: ngdndk4394982300evn,
+    p    firstname: John,
+    p    message: Login successful!
+    p }
+    p It returns an "IncorrectUsernameError" with the message "Password or username is incorrect" for wrong credentials.
+    br
+    p <strong>Logout</strong> is achieved solely by the frontend client by destroying the token in store.
+    | e.g. If token is stored in localStorage, localStorage.removeItem('token') logs the user out.
+
+  script.
+  
+    function login() {
+      
+      let form = $("#login-form");
+      let body = form.serialize();
+      console.log('Post body ', body)
+
+      if(navigator.onLine){
+        $.post('/user/login', body).done(function(data){
+          console.log(data);
+          alert(`Message/Token: ${data.message}`);
+        })
+        .fail(function(error) {
+          alert( error.message );
+        }); 
+      }
+      else
+        alert("No internet connection, check your internet connection and try again!");
+    }
